@@ -5,20 +5,21 @@
 #include "MockObject.generated.h"
 
 UCLASS()
-class UMockObject : public UObject
+class NANSUE4TESTSHELPERS_API UMockObject : public UObject
 {
 	GENERATED_BODY()
 public:
-	void SetMyWorld(TSharedPtr<UWorld> World)
+	void SetMyWorld(UWorld* World)
 	{
 		MyWorld = World;
 	}
 
 	virtual class UWorld* GetWorld() const override
 	{
-		return MyWorld.Get();
+		return MyWorld;
 	}
 
 private:
-	TSharedPtr<UWorld> MyWorld;
+	UPROPERTY()
+	UWorld* MyWorld;
 };

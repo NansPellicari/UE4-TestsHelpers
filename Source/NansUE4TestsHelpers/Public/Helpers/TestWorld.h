@@ -5,17 +5,39 @@
 #include "Engine/EngineBaseTypes.h"
 #include "Engine/EngineTypes.h"
 #include "EngineGlobals.h"
+#include "NansUE4TestsHelpers/Public/Mock/MockGameInstance.h"
+#include "NansUE4TestsHelpers/Public/Mock/MockObject.h"
+#include "Runtime/Engine/Classes/Engine/Level.h"
+#include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
+#include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 
 namespace NTestWorld
 {
-	UWorld* CreateAndPlay(EWorldType::Type Type)
+	UWorld* CreateAndPlay(EWorldType::Type Type, bool bWithGameInstance = false)
 	{
-		const double StartTime = FPlatformTime::Seconds();
-		UWorld* World = UWorld::CreateWorld(Type, false);
+		UWorld* World = UWorld::CreateWorld(Type, false, FName("MyTestWorld"));
 		FWorldContext& WorldContext = GEngine->CreateNewWorldContext(Type);
+
 		WorldContext.SetCurrentWorld(World);
 
 		FURL URL;
+
+		if (bWithGameInstance)
+		{
+			APlayerController* PC = NewObject<APlayerController>(World->PersistentLevel);
+			ULocalPlayer* Player = NewObject<ULocalPlayer>(GEngine);
+			PC->SetPlayer(Player);
+			Player->SetControllerId(PC->GetUniqueID());
+			UMockGameInstance* GI = NewObject<UMockGameInstance>(GEngine);
+			WorldContext.OwningGameInstance = GI;
+			World->SetGameInstance(GI);
+			GI->SetWorldContext(&WorldContext);
+			GI->AddLocalPlayer(Player, PC->GetUniqueID());
+			World->SetGameMode(URL);
+			PC->InitPlayerState();
+			World->AddController(PC);
+		}
+
 		World->InitializeActorsForPlay(URL);
 		World->BeginPlay();
 
