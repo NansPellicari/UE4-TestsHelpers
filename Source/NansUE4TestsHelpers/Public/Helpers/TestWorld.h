@@ -10,6 +10,8 @@
 #include "Runtime/Engine/Classes/Engine/Level.h"
 #include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
+#include "Runtime/Engine/Public/Model.h"
+#include "Runtime/Engine/Public/Tests/AutomationCommon.h"
 
 namespace NTestWorld
 {
@@ -50,6 +52,7 @@ namespace NTestWorld
 		World->DestroyWorld(false);
 	}
 
+	// Inspired from this:
 	// https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Engine/Private/TimerManagerTests.cpp
 	void Tick(UWorld* World, float Time = 1.f)
 	{
@@ -61,6 +64,39 @@ namespace NTestWorld
 
 			GFrameCounter++;
 		}
+	}
+
+	// Inspired from this:
+	// https://github.com/EpicGames/UnrealEngine/tree/release/Engine/Source/Editor/UnrealEd/Private/EditorServer.cpp::CreateTransLevelMoveBuffer()
+	bool CreateAndOpenNewLevel(UWorld* TestWorld)
+	{
+		static int32 LvlCounter;
+		bool bCanProceed = true;
+		FString LvlName = FString::Format(TEXT("LevelForTest_{0}"), {LvlCounter++});
+		ULevel* BufferLevel = NewObject<ULevel>(TestWorld, *LvlName);
+		BufferLevel->Initialize(FURL(nullptr));
+		check(BufferLevel);
+		BufferLevel->AddToRoot();
+		BufferLevel->OwningWorld = TestWorld;
+		BufferLevel->Model = NewObject<UModel>(BufferLevel);
+		BufferLevel->Model->Initialize(nullptr, true);
+		BufferLevel->bIsVisible = true;
+
+		BufferLevel->SetFlags(RF_Transactional);
+		BufferLevel->Model->SetFlags(RF_Transactional);
+
+		bCanProceed = TestWorld->SetCurrentLevel(BufferLevel);
+		TestWorld->SelectLevel(BufferLevel);
+		BufferLevel->UpdateLevelComponents(true);
+
+		if (!bCanProceed)
+		{
+			GEngine->Exec(TestWorld, TEXT("Exit"));
+			UE_LOG(LogTemp, Fatal, TEXT("Can't proceed level %s"), *LvlName);
+			return false;
+		}
+
+		return bCanProceed;
 	}
 
 	struct FDummyDelegate
