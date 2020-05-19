@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 
-#include "MockObject.generated.h"
+#include "FakeObject.generated.h"
 
+// About object nomenclature @see https://nirajrules.wordpress.com/2011/08/27/dummy-vs-stub-vs-spy-vs-fake-vs-mock/
 UCLASS()
-class NANSUE4TESTSHELPERS_API UMockObject : public UObject
+class NANSUE4TESTSHELPERS_API UFakeObject : public UObject
 {
 	GENERATED_BODY()
 public:

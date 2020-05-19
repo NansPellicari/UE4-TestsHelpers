@@ -14,10 +14,34 @@
 	{                                                             \
 		TEST_LOG(text, expression, expected);                     \
 	}
+
 #define TEST_NE(text, expression, expected)                          \
 	if (SpecHelpers::TestNotEqual(text, expression, expected, this)) \
 	{                                                                \
 		TEST_LOG(text, expression, expected);                        \
+	}
+
+#define TEST_GT(text, expression, expected)                             \
+	if (SpecHelpers::TestGreaterThan(text, expression, expected, this)) \
+	{                                                                   \
+		TEST_LOG(text, expression, expected);                           \
+	}
+
+#define TEST_GE(text, expression, expected)                             \
+	if (SpecHelpers::TestGreaterOrEqualThan(text, expression, expected, this)) \
+	{                                                                   \
+		TEST_LOG(text, expression, expected);                           \
+	}
+
+#define TEST_LT(text, expression, expected)                           \
+	if (SpecHelpers::TestLowerThan(text, expression, expected, this)) \
+	{                                                                 \
+		TEST_LOG(text, expression, expected);                         \
+	}
+#define TEST_LE(text, expression, expected)                                  \
+	if (SpecHelpers::TestLowerOrEqualThan(text, expression, expected, this)) \
+	{                                                                        \
+		TEST_LOG(text, expression, expected);                                \
 	}
 
 #define TEST_TRUE(text, expression)                    \
@@ -36,6 +60,12 @@
 	if (SpecHelpers::TestNotNull(text, expression, this)) \
 	{                                                     \
 		TEST_LOG(text, expression, TEXT("not nullptr"));  \
+	}
+
+#define TEST_NULL(text, expression)                     \
+	if (SpecHelpers::TestNull(text, expression, this))  \
+	{                                                   \
+		TEST_LOG(text, expression, TEXT("is nullptr")); \
 	}
 
 #define TEST_THROW(expression, expectedType)                                                                                  \
@@ -89,6 +119,38 @@ namespace SpecHelpers
 	{
 		This->TestNotEqual(Description, Expression, Expected);
 		return Expression != Expected;
+	}
+
+	template <typename T, typename T2>
+	inline bool TestGreaterThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	{
+		bool IsGreaterThan = Expression > Expected;
+		This->TestTrue(Description, IsGreaterThan);
+		return IsGreaterThan;
+	}
+
+	template <typename T, typename T2>
+	inline bool TestGreaterOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	{
+		bool IsGreaterThan = Expression => Expected;
+		This->TestTrue(Description, IsGreaterThan);
+		return IsGreaterThan;
+	}
+
+	template <typename T, typename T2>
+	inline bool TestLowerThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	{
+		bool IsLowerThan = Expression < Expected;
+		This->TestTrue(Description, IsLowerThan);
+		return IsLowerThan;
+	}
+
+	template <typename T, typename T2>
+	inline bool TestLowerOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	{
+		bool IsLowerThan = Expression <= Expected;
+		This->TestTrue(Description, IsLowerThan);
+		return IsLowerThan;
 	}
 
 	template <typename T>

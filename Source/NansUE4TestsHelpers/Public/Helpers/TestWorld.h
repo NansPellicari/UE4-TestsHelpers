@@ -5,8 +5,8 @@
 #include "Engine/EngineBaseTypes.h"
 #include "Engine/EngineTypes.h"
 #include "EngineGlobals.h"
-#include "NansUE4TestsHelpers/Public/Mock/MockGameInstance.h"
-#include "NansUE4TestsHelpers/Public/Mock/MockObject.h"
+#include "NansUE4TestsHelpers/Public/Mock/FakeGameInstance.h"
+#include "NansUE4TestsHelpers/Public/Mock/FakeObject.h"
 #include "Runtime/Engine/Classes/Engine/Level.h"
 #include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
@@ -15,9 +15,9 @@
 
 namespace NTestWorld
 {
-	UWorld* CreateAndPlay(EWorldType::Type Type, bool bWithGameInstance = false)
+	UWorld* CreateAndPlay(EWorldType::Type Type, bool bWithGameInstance = false, FName WorldName = FName("MyTestWorld"))
 	{
-		UWorld* World = UWorld::CreateWorld(Type, false, FName("MyTestWorld"));
+		UWorld* World = UWorld::CreateWorld(Type, false, WorldName);
 		FWorldContext& WorldContext = GEngine->CreateNewWorldContext(Type);
 
 		WorldContext.SetCurrentWorld(World);
@@ -30,7 +30,7 @@ namespace NTestWorld
 			ULocalPlayer* Player = NewObject<ULocalPlayer>(GEngine);
 			PC->SetPlayer(Player);
 			Player->SetControllerId(PC->GetUniqueID());
-			UMockGameInstance* GI = NewObject<UMockGameInstance>(GEngine);
+			UFakeGameInstance* GI = NewObject<UFakeGameInstance>(GEngine);
 			WorldContext.OwningGameInstance = GI;
 			World->SetGameInstance(GI);
 			GI->SetWorldContext(&WorldContext);
