@@ -15,7 +15,8 @@
 
 namespace NTestWorld
 {
-	UWorld* CreateAndPlay(EWorldType::Type Type, bool bWithGameInstance = false, FName WorldName = FName("MyTestWorld"))
+	UWorld* CreateAndPlay(
+		EWorldType::Type Type, bool bWithGameInstance = false, FName WorldName = FName("MyTestWorld"), UClass* GIClass = nullptr)
 	{
 		UWorld* World = UWorld::CreateWorld(Type, false, WorldName);
 		FWorldContext& WorldContext = GEngine->CreateNewWorldContext(Type);
@@ -30,7 +31,11 @@ namespace NTestWorld
 			ULocalPlayer* Player = NewObject<ULocalPlayer>(GEngine);
 			PC->SetPlayer(Player);
 			Player->SetControllerId(PC->GetUniqueID());
-			UFakeGameInstance* GI = NewObject<UFakeGameInstance>(GEngine);
+			if (GIClass == nullptr)
+			{
+				GIClass = UFakeGameInstance::StaticClass();
+			}
+			UFakeGameInstance* GI = NewObject<UFakeGameInstance>(GEngine, GIClass);
 			WorldContext.OwningGameInstance = GI;
 			World->SetGameInstance(GI);
 			GI->SetWorldContext(&WorldContext);
@@ -38,6 +43,7 @@ namespace NTestWorld
 			World->SetGameMode(URL);
 			PC->InitPlayerState();
 			World->AddController(PC);
+			GI->Init();
 		}
 
 		World->InitializeActorsForPlay(URL);
