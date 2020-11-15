@@ -90,8 +90,9 @@ namespace NTestWorld
 	// https://github.com/EpicGames/UnrealEngine/tree/release/Engine/Source/Editor/UnrealEd/Private/EditorServer.cpp::CreateTransLevelMoveBuffer()
 	bool CreateAndOpenNewLevel(UWorld* TestWorld)
 	{
+		bool bCanProceed = false;
+#if WITH_EDITORONLY_DATA
 		static int32 LvlCounter;
-		bool bCanProceed = true;
 		FString LvlName = FString::Format(TEXT("LevelForTest_{0}"), {LvlCounter++});
 		ULevel* BufferLevel = NewObject<ULevel>(TestWorld, *LvlName);
 		BufferLevel->Initialize(FURL(nullptr));
@@ -115,6 +116,7 @@ namespace NTestWorld
 			UE_LOG(LogTemp, Fatal, TEXT("Can't proceed level %s"), *LvlName);
 			return false;
 		}
+#endif
 
 		return bCanProceed;
 	}
