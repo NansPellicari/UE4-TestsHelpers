@@ -14,26 +14,30 @@
 
 namespace UnrealBuildTool.Rules
 {
-    public class NansUE4TestsHelpers : ModuleRules
-    {
-        public NansUE4TestsHelpers(ReadOnlyTargetRules Target) : base(Target)
-        {
-            PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+	public class NansUE4TestsHelpers : ModuleRules
+	{
+		public NansUE4TestsHelpers(ReadOnlyTargetRules Target) : base(Target)
+		{
+			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-            PublicDependencyModuleNames.AddRange(
-                new string[]
-                {
-                    "Core",
-                }
-                );
+			PublicDependencyModuleNames.AddRange(
+				new[]
+				{
+					"Core"
+				}
+			);
 
-            PrivateDependencyModuleNames.AddRange(
-                new string[]
-                {
-                    "CoreUObject",
-                    "Engine"
-                }
-                );
-        }
-    }
+			PrivateDependencyModuleNames.AddRange(
+				new[]
+				{
+					"CoreUObject",
+					"Engine",
+					"Slate",
+					"SlateCore",
+					"UMG",
+					"InputCore"
+				}
+			);
+		}
+	}
 }
