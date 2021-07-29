@@ -16,6 +16,7 @@
 
 #include "CoreMinimal.h"
 #include "Core\Public\Misc\AutomationTest.h"
+#include "INansUE4TestsHelpers.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
@@ -110,72 +111,74 @@
 namespace SpecHelpers
 {
 	template <typename T1>
-	inline bool TestTrue(const FString& Description, T1 Expression, FAutomationTestBase* This)
+	bool TestTrue(const FString& Description, T1 Expression, FAutomationTestBase* This)
 	{
 		This->TestTrue(Description, Expression);
 		return Expression == true;
 	}
+
 	template <typename T1>
-	inline bool TestFalse(const FString& Description, T1 Expression, FAutomationTestBase* This)
+	bool TestFalse(const FString& Description, T1 Expression, FAutomationTestBase* This)
 	{
 		This->TestFalse(Description, Expression);
 		return Expression == false;
 	}
+
 	template <typename T1, typename T2>
-	inline bool TestEqual(const FString& Description, T1 Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestEqual(const FString& Description, T1 Expression, T2 Expected, FAutomationTestBase* This)
 	{
 		This->TestEqual(Description, Expression, Expected);
 		return Expression == Expected;
 	}
 
 	template <typename T1, typename T2>
-	inline bool TestNotEqual(const FString& Description, T1 Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestNotEqual(const FString& Description, T1 Expression, T2 Expected, FAutomationTestBase* This)
 	{
 		This->TestNotEqual(Description, Expression, Expected);
 		return Expression != Expected;
 	}
 
 	template <typename T, typename T2>
-	inline bool TestGreaterThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestGreaterThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
 	{
-		bool IsGreaterThan = Expression > Expected;
+		const bool IsGreaterThan = Expression > Expected;
 		This->TestTrue(Description, IsGreaterThan);
 		return IsGreaterThan;
 	}
 
 	template <typename T, typename T2>
-	inline bool TestGreaterOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestGreaterOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
 	{
-		bool IsGreaterThan = Expression >= Expected;
+		const bool IsGreaterThan = Expression >= Expected;
 		This->TestTrue(Description, IsGreaterThan);
 		return IsGreaterThan;
 	}
 
 	template <typename T, typename T2>
-	inline bool TestLowerThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestLowerThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
 	{
-		bool IsLowerThan = Expression < Expected;
+		const bool IsLowerThan = Expression < Expected;
 		This->TestTrue(Description, IsLowerThan);
 		return IsLowerThan;
 	}
 
 	template <typename T, typename T2>
-	inline bool TestLowerOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
+	bool TestLowerOrEqualThan(const FString& Description, T Expression, T2 Expected, FAutomationTestBase* This)
 	{
-		bool IsLowerThan = Expression <= Expected;
+		const bool IsLowerThan = Expression <= Expected;
 		This->TestTrue(Description, IsLowerThan);
 		return IsLowerThan;
 	}
 
 	template <typename T>
-	inline bool TestNull(const FString& Description, T Expression, FAutomationTestBase* This)
+	bool TestNull(const FString& Description, T Expression, FAutomationTestBase* This)
 	{
 		This->TestNull(Description, Expression);
 		return Expression == nullptr;
 	}
 
 	template <typename T>
-	inline bool TestNotNull(const FString& Description, T Expression, FAutomationTestBase* This)
+	bool TestNotNull(const FString& Description, T Expression, FAutomationTestBase* This)
 	{
 		This->TestNotNull(Description, Expression);
 		return Expression != nullptr;
@@ -183,12 +186,14 @@ namespace SpecHelpers
 
 	inline void log(const FString& Description, const FString& Expression, const FString& Expected)
 	{
-		UE_LOG(LogTemp,
+		UE_LOG(
+			LogUE4TestsHelpers,
 			Display,
 			TEXT("Test succeed: \"%s\" with expression \"%s\" which expects \"%s\""),
 			*Description,
 			*Expression,
-			*Expected);
+			*Expected
+		);
 	}
 
 	inline bool WaitUntilTrue(const TFunction<bool()>& Pred, const TFunction<bool()>& TestResult, double TimeoutSeconds)
@@ -200,6 +205,6 @@ namespace SpecHelpers
 		}
 		return TestResult();
 	}
-}	 // namespace SpecHelpers
+} // namespace SpecHelpers
 
 #endif	  // WITH_DEV_AUTOMATION_TESTS

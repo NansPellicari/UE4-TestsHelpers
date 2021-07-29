@@ -16,6 +16,8 @@
 #include "INansUE4TestsHelpers.h"
 #include "Modules/ModuleManager.h"
 
+DEFINE_LOG_CATEGORY(LogUE4TestsHelpers);
+
 class FNansUE4TestsHelpers : public INansUE4TestsHelpers
 {
 	/** IModuleInterface implementation */

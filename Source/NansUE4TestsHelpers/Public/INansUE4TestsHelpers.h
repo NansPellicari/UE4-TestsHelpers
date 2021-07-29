@@ -18,6 +18,8 @@
 #include "Modules/ModuleInterface.h"
 #include "Modules/ModuleManager.h"
 
+NANSUE4TESTSHELPERS_API DECLARE_LOG_CATEGORY_EXTERN(LogUE4TestsHelpers, Log, All);
+
 /**
  * The public interface to this module.  In most cases, this interface is only public to sibling modules
  * within this plugin.
