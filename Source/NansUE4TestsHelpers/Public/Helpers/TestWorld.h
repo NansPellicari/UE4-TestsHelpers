@@ -18,11 +18,14 @@
 #include "Engine/Engine.h"
 #include "Engine/EngineBaseTypes.h"
 #include "Engine/EngineTypes.h"
+#include "EngineGlobals.h"
 #include "NansUE4TestsHelpers/Public/Mock/FakeGameInstance.h"
+#include "NansUE4TestsHelpers/Public/Mock/FakeObject.h"
 #include "Runtime/Engine/Classes/Engine/Level.h"
 #include "Runtime/Engine/Classes/Engine/LocalPlayer.h"
 #include "Runtime/Engine/Classes/GameFramework/PlayerController.h"
 #include "Runtime/Engine/Public/Model.h"
+#include "Runtime/Engine/Public/Tests/AutomationCommon.h"
 
 namespace NTestWorld
 {
@@ -106,12 +109,11 @@ namespace NTestWorld
 		bCanProceed = TestWorld->SetCurrentLevel(BufferLevel);
 		TestWorld->SelectLevel(BufferLevel);
 		BufferLevel->UpdateLevelComponents(true);
-		FCoreUObjectDelegates::PostLoadMapWithWorld.Broadcast(TestWorld);
-		
+
 		if (!bCanProceed)
 		{
 			GEngine->Exec(TestWorld, TEXT("Exit"));
-			UE_LOG(LogUE4TestsHelpers, Fatal, TEXT("Can't proceed level %s"), *LvlName);
+			UE_LOG(LogTemp, Fatal, TEXT("Can't proceed level %s"), *LvlName);
 			return false;
 		}
 #endif

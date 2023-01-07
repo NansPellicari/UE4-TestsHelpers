@@ -36,7 +36,7 @@ void UNUE4TestUtilitiesBPLibrary::TestUtilitiesClick(UWidget* Widget, bool& bSuc
 							  Widget->GetCachedGeometry().GetLocalSize() / 2.0f);
 
 	const FKey MouseLMB = ClickBtn == ETestUtilitiesMouseClick::LEFT ? EKeys::LeftMouseButton : EKeys::RightMouseButton;
-	ViewportClient->InputKey(Viewport, 0, MouseLMB, IE_Pressed);
+	ViewportClient->InputKey(FInputKeyEventArgs(Viewport, 0, MouseLMB, IE_Pressed));
 
 	//Get our slate application
 	FSlateApplication& SlateApp = FSlateApplication::Get();
